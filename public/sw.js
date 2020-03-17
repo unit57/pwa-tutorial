@@ -1,7 +1,7 @@
 importScripts("/src/js/idb.js");
 importScripts("/src/js/utility.js");
 
-var CACHE_STATIC_NAME = "static-v26";
+var CACHE_STATIC_NAME = "static-v28";
 var CACHE_DYNAMIC_NAME = "dynamic-v2";
 var STATIC_FILES = [
   "/",
@@ -183,24 +183,29 @@ self.addEventListener("sync", function(event) {
     event.waitUntil(
       readAllData("sync-posts").then(function(data) {
         for (var dt of data) {
-          fetch("https://pwagram-3e5f2.firebaseio.com/posts.json", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json"
-            },
-            body: JSON.stringify({
-              id: dt.id,
-              title: dt.title,
-              location: dt.location,
-              image:
-                "https://www.esquireme.com/sites/default/files/images/2020/01/26/delorean.png"
-            })
-          })
+          fetch(
+            "https://us-central1-pwagram-3e5f2.cloudfunctions.net/storePostData",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+              },
+              body: JSON.stringify({
+                id: dt.id,
+                title: dt.title,
+                location: dt.location,
+                image:
+                  "https://www.esquireme.com/sites/default/files/images/2020/01/26/delorean.png"
+              })
+            }
+          )
             .then(function(res) {
               console.log("Sent data", res);
               if (res.ok) {
-                deleteItemFromData("sync-posts", dt.id); // Isn't working correctly!
+                res.json().then(resData => {
+                  deleteItemFromData("sync-posts", resData.id);
+                });
               }
             })
             .catch(function(err) {

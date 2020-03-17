@@ -125,14 +125,14 @@ if ("indexedDB" in window) {
 }
 
 function sendData() {
-  fetch("https://pwagram-3e5f2.firebaseio.com/posts.json", {
+  fetch("https://us-central1-pwagram-3e5f2.cloudfunctions.net/storePostData", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Accept: "application/json",
-      "Access-Control-Allow-Origin": "http://localhost:8080/",
-      "Access-Control-Allow-Methods": "POST",
-      "Access-Control-Allow-Headers": "X-Requested-With,content-type"
+      Accept: "application/json"
+      // "Access-Control-Allow-Origin": "http://localhost:8080/",
+      // "Access-Control-Allow-Methods": "POST",
+      // "Access-Control-Allow-Headers": "X-Requested-With,content-type"
     },
     body: JSON.stringify({
       id: new Date().toISOString(),
